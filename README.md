@@ -4,6 +4,8 @@ a machine-readable format RDF. This repository contains web applications
 that show the usefulness of such resource.
 
 1. A search engine of word forms for the Czech Wiktionary
+   - finds all Wiktionary pages containing the word, and if 
+   the word is an inflected form, it provides its properties as well
    - https://martin-lukas.github.io/cswiktionary2rdf-tools/search.html
 
 2. SPARQL endpoint for the RDF dataset
