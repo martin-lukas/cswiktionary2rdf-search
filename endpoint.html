@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SPARQL endpoint Wikislovníku</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="endpoint-script.js"></script>
+</head>
+<body>
+<a href="../index.html">Domů</a>
+<h1>SPARQL endpoint</h1>
+<p>Tento SPARQL endpoint umožňuje odesílat dotazy na RDF dataset vytvořený z Wikislovníku.</p>
+<div>Můžete používat tyto prefixy ve SPARQL dotazech:<br>
+    <pre id="prefixes"></pre>
+    <script>
+        let cleanedPrefixes = PREFIXES.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        document.getElementById("prefixes").innerHTML = cleanedPrefixes;
+    </script>
+</div>
+<label for="query">SPARQL dotaz:</label><br>
+<textarea id="query"></textarea><br>
+<input id="send" type="submit" value="Odeslat" onclick="sendRequest();"><br>
+<br>
+<div id="title"></div>
+<pre id="output"></pre>
+<script>
+    // Retrieve last query
+    let lastQuery = localStorage.lastquery;
+    if (lastQuery !== undefined ) {
+        document.getElementById("query").value = lastQuery;
+    }
+</script>
+</body>
+</html>

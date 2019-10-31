@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lemmatizátor Wikislovníku</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="search-script.js"></script>
+</head>
+<a href="../index.html">Domů</a>
+<h1>Vyhledávač slovních tvarů českého Wikislovníku</h1>
+<p>
+    Tento vyhledávač poskytuje informace o slovech či slovních tvarech nacházejících se v českém
+    Wikislovníku.<br> Slovním tvarem je myšlen ohýbaný tvar základního tvaru (skloňováním, stupňováním či časováním).
+</p>
+<label for="endpoint">Endpoint URL:</label>
+<input id="endpoint" type="text" size="50"/><br><br>
+<label for="word">Hledej:</label>
+<input id="word" type="text" size="25">
+<input id="send" type="submit" value="Odeslat" onclick="sendRequest();">
+<br><br>
+<div id="title"></div>
+<br>
+<table id="hidden-table">
+    <thead>
+    <th>Název stránky</th>
+    <th>Popis slovního tvaru</th>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+</table>
+<script>
+    let lastEndpoint = localStorage.lastendpoint;
+    document.getElementById("endpoint").value = (lastEndpoint !== undefined)
+        ? lastEndpoint
+        : DEFAULT_ENDPOINT;
+
+    document.getElementById("hidden-table").style.display = "none";
+    // Enabling sending form with pressing ENTER
+    let input = document.getElementById("word");
+    input.addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("send").click();
+        }
+    });
+</script>
+</body>
+</html>

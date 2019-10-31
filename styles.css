@@ -1,0 +1,42 @@
+body {margin: 0; padding: 0; background-color: #ededed; font: 1.1em verdana, arial;}
+
+/* For divs that change dimensions when afected by margin, padding or a border. */
+* {
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#header {
+	background-color: #ededed; 
+	text-align: center;
+}
+#container {
+	min-height: 500px; 
+	background-color: white;
+}
+#content {
+	max-width: 800px; 
+	margin: 0 auto; 
+	padding: 10px;
+}
+#footer {
+	padding: 10px; 
+	text-align: center;
+}
+
+td, th {border: 1px solid black;}
+ul {margin: 0;}
+table {border-collapse: collapse;}
+td {vertical-align: top}
+textarea {
+	width: 600px;
+	height: 300px;
+}
+
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
