@@ -146,6 +146,12 @@ function extractNoun(baseObj, res) {
                 let result = results[i];
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
+
+                // for nouns that have more than one gender
+                if (getOntoName(gen) === "feminine" || getOntoName(gen) === "neuter") {
+                    an = "";
+                }
+
                 appendEntry(
                     base,
                     toCzech("Noun") + ", " + toCzech(getOntoName(gen)) + " " + toCzech(getOntoName(an))
@@ -871,11 +877,11 @@ function toCzech(word) {
         case "inanimate" :
             return "neživotný";
         case "singular" :
-            return "jednotné č.";
+            return "č. jednotné";
         case "plural" :
-            return "množné č.";
+            return "č. množné";
         case "dual" :
-            return "duální č.";
+            return "č. duální";
         case "nominativeCase" :
             return "1.";
         case "genitiveCase" :
