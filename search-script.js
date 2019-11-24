@@ -46,8 +46,7 @@ function getResources(word) {
 }
 
 function getResults(query) {
-    let endpointField = document.getElementById("endpoint").value;
-    let endpoint = endpointField;
+    let endpoint = document.getElementById("endpoint").value;
     let params = "?query=" + encodeURIComponent(query) + "&format=json";
 
     let result;
@@ -92,34 +91,34 @@ function extractResource(resource) {
 function extractPOS(baseObj, res, pos) {
     let posName = getOntoName(pos);
     switch (posName) {
-        case "Noun":
+        case "noun":
             extractNoun(baseObj, res);
             break;
-        case "Adjective":
+        case "adjective":
             extractAdjective(baseObj, res);
             break;
-        case "Pronoun":
+        case "pronoun":
             extractPronoun(baseObj, res);
             break;
-        case "Numeral":
+        case "numeral":
             extractNumeral(baseObj, res);
             break;
-        case "Verb":
+        case "verb":
             extractVerb(baseObj, res);
             break;
-        case "Adverb":
+        case "adverb":
             extractAdverb(baseObj, res);
             break;
-        case "Preposition":
+        case "preposition":
             extractPreposition(baseObj, res);
             break;
-        case "Conjunction":
+        case "conjunction":
             extractConjunction(baseObj, res);
             break;
-        case "Particle":
+        case "particle":
             extractParticle(baseObj, res);
             break;
-        case "Interjection":
+        case "isnterjection":
             extractInterjection(baseObj, res);
             break;
     }
@@ -135,7 +134,7 @@ function extractNoun(baseObj, res) {
             PREFIXES +
             'SELECT ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Noun . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:noun . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
@@ -154,7 +153,7 @@ function extractNoun(baseObj, res) {
 
                 appendEntry(
                     base,
-                    toCzech("Noun") + ", " + toCzech(getOntoName(gen)) + " " + toCzech(getOntoName(an))
+                    toCzech("noun") + ", " + toCzech(getOntoName(gen)) + " " + toCzech(getOntoName(an))
                 );
             }
         }
@@ -163,7 +162,7 @@ function extractNoun(baseObj, res) {
             PREFIXES +
             'SELECT ?c ?no ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Noun ; ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:noun ; ' +
             '                   lexinfo:case  ?c ; ' +
             '                   lexinfo:number  ?no ; ' +
             '                   lexinfo:gender  ?gen .' +
@@ -182,7 +181,7 @@ function extractNoun(baseObj, res) {
             if (an !== "") {
                 genderStr += " " + toCzech(getOntoName(an));
             }
-            appendEntry(base, toCzech("Noun") + ", " +
+            appendEntry(base, toCzech("noun") + ", " +
                 genderStr + ", " +
                 toCzech(getOntoName(no)) + ", " +
                 toCzech(getOntoName(c)) + " pád");
@@ -194,19 +193,19 @@ function extractAdjective(baseObj, res) {
     let level = baseObj["level"];
     let base = baseObj["base"];
     if (level === 1) {
-        appendEntry(base, toCzech("Adjective"));
+        appendEntry(base, toCzech("adjective"));
     } else if (level === 2) {
         if (isCaseForm(res)) {
             let query =
                 PREFIXES +
-                'SELECT ?c ?type ?no ?gen ?an ' +
+                'SELECT ?c ?form ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Adjective ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:adjective ; ' +
                 '    optional {<' + res + '> lexinfo:case  ?c} ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    optional {<' + res + '> lexinfo:gender  ?gen} ' +
                 '    optional {<' + res + '> lexinfo:animacy ?an}' +
-                '    optional {<' + res + '> lexinfo:lexTermType ?type}' +
+                '    optional {<' + res + '> mte:hasAdjectiveFormation ?form}' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
                 '    ?posRes lemon:formVariant <' + res + '> . ' +
                 '}';
@@ -224,22 +223,22 @@ function extractAdjective(baseObj, res) {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
 
-                let type = getValue(result, "type");
-                if (type !== "") {
-                    type = "(" + toCzech("short form") + ")";
+                let form = getValue(result, "form");
+                if (form !== "") {
+                    form = "(" + toCzech(getOntoName(form)) + ")";
                 }
 
-                appendEntry(base, toCzech("Adjective") + ", " +
+                appendEntry(base, toCzech("adjective") + ", " +
                     toCzech(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád " + type);
+                    toCzech(getOntoName(c)) + " pád " + form);
             }
         } else if (isDegreeForm(res)) {
             let query =
                 PREFIXES +
                 'SELECT ?deg ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Adjective ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:adjective ; ' +
                 '    optional {<' + res + '> lexinfo:degree ?deg}' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
                 '    ?posRes lemon:formVariant <' + res + '> . ' +
@@ -247,7 +246,7 @@ function extractAdjective(baseObj, res) {
             let results = getResults(query);
             if (results.length === 1) {
                 let deg = getValue(results[0], "deg");
-                appendEntry(base, toCzech("Adjective") + ", " + toCzech(getOntoName(deg)));
+                appendEntry(base, toCzech("adjective") + ", " + toCzech(getOntoName(deg)));
             }
         }
     }
@@ -261,7 +260,7 @@ function extractPronoun(baseObj, res) {
             PREFIXES +
             'SELECT ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Pronoun . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:pronoun . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
@@ -279,21 +278,20 @@ function extractPronoun(baseObj, res) {
                         genderStr += " " + toCzech(getOntoName(an));
                     }
                 }
-                appendEntry(base, toCzech("Pronoun") + genderStr);
+                appendEntry(base, toCzech("pronoun") + genderStr);
             }
         }
     } else if (level === 2) {
         if ((isExtendedDeclension(res))) {
             let query =
                 PREFIXES +
-                'SELECT ?c ?type ?no ?gen ?an ' +
+                'SELECT ?c ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Pronoun ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:pronoun ; ' +
                 '    optional {<' + res + '> lexinfo:case  ?c} ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    optional {<' + res + '> lexinfo:gender  ?gen} ' +
                 '    optional {<' + res + '> lexinfo:animacy ?an}' +
-                '    optional {<' + res + '> lexinfo:lexTermType ?type}' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
                 '    ?posRes lemon:formVariant <' + res + '> . ' +
                 '}';
@@ -311,22 +309,17 @@ function extractPronoun(baseObj, res) {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
 
-                let type = getValue(result, "type");
-                if (type !== "") {
-                    type = "(" + toCzech("short form") + ")";
-                }
-
-                appendEntry(base, toCzech("Pronoun") + ", " +
+                appendEntry(base, toCzech("pronoun") + ", " +
                     toCzech(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád " + type);
+                    toCzech(getOntoName(c)) + " pád");
             }
         } else {
             let query =
                 PREFIXES +
                 'SELECT ?c ?no ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Pronoun ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:pronoun ; ' +
                 '                   lexinfo:case  ?c ; ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
@@ -341,7 +334,7 @@ function extractPronoun(baseObj, res) {
                     noStr = ", " + toCzech(getOntoName(no));
                 }
                 let c = getValue(result, "c");
-                appendEntry(base, toCzech("Pronoun") +
+                appendEntry(base, toCzech("pronoun") +
                     noStr + ", " +
                     toCzech(getOntoName(c)) + " pád");
             }
@@ -357,7 +350,7 @@ function extractNumeral(baseObj, res) {
             PREFIXES +
             'SELECT ?no ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Numeral . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:numeral . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    optional {<' + res + '> lexinfo:number ?no}' +
@@ -378,21 +371,20 @@ function extractNumeral(baseObj, res) {
                 if (an !== "") {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
-                appendEntry(base, toCzech("Numeral") + noStr + genderStr);
+                appendEntry(base, toCzech("numeral") + noStr + genderStr);
             }
         }
     } else if (level === 2) {
         if ((isExtendedDeclension(res))) {
             let query =
                 PREFIXES +
-                'SELECT ?c ?type ?no ?gen ?an ' +
+                'SELECT ?c ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Numeral ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:numeral ; ' +
                 '    optional {<' + res + '> lexinfo:case  ?c} ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    optional {<' + res + '> lexinfo:gender  ?gen} ' +
                 '    optional {<' + res + '> lexinfo:animacy ?an}' +
-                '    optional {<' + res + '> lexinfo:lexTermType ?type}' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
                 '    ?posRes lemon:formVariant <' + res + '> . ' +
                 '}';
@@ -410,22 +402,17 @@ function extractNumeral(baseObj, res) {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
 
-                let type = getValue(result, "type");
-                if (type !== "") {
-                    type = "(" + toCzech("short form") + ")";
-                }
-
-                appendEntry(base, toCzech("Numeral") + ", " +
+                appendEntry(base, toCzech("numeral") + ", " +
                     toCzech(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád " + type);
+                    toCzech(getOntoName(c)) + " pád");
             }
         } else {
             let query =
                 PREFIXES +
                 'SELECT ?c ?no ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Numeral ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:numeral ; ' +
                 '                   lexinfo:case  ?c ; ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
@@ -440,7 +427,7 @@ function extractNumeral(baseObj, res) {
                     noStr = toCzech(getOntoName(no)) + ", ";
                 }
                 let c = getValue(result, "c");
-                appendEntry(base, toCzech("Numeral") + ", " +
+                appendEntry(base, toCzech("numeral") + ", " +
                     noStr +
                     toCzech(getOntoName(c)) + " pád");
             }
@@ -456,7 +443,7 @@ function extractVerb(baseObj, res) {
             PREFIXES +
             'SELECT ?mood ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Verb . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:verb . ' +
             '    optional {<' + res + '> lexinfo:verbFormMood ?mood} ' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
             '}';
@@ -467,7 +454,7 @@ function extractVerb(baseObj, res) {
             if (mood !== "") {
                 moodStr = ", " + toCzech(getOntoName(mood))
             }
-            appendEntry(base, toCzech("Verb") + moodStr);
+            appendEntry(base, toCzech("verb") + moodStr);
         }
     } else if (level === 2) {
         if (isVerbParticiple(res)) {
@@ -475,7 +462,7 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?voice ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:Verb ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:verb ; ' +
                 '                  lexinfo:voice         ?voice ;' +
                 '                  lexinfo:number        ?no ;' +
                 '                  lexinfo:gender        ?gen .' +
@@ -495,18 +482,18 @@ function extractVerb(baseObj, res) {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("Verb") + ", " +
+                appendEntry(base, toCzech("verb") + ", " +
                     toCzech(getOntoName(voice)) + ", " +
                     toCzech(getOntoName(no)) +
                     genderStr);
             }
-        } else if (isVerbGerundive(res)) {
+        } else if (isVerbTransgressive(res)) {
             let query =
                 PREFIXES +
                 'SELECT ?tense ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech        lexinfo:Verb ; ' +
-                '                   lexinfo:verbFormMood        lexinfo:gerundive ;' +
+                '    <' + res + '>  lexinfo:partOfSpeech        lexinfo:verb ; ' +
+                '                   mte:hasVerbForm             mte:Transgressive ;' +
                 '                   lexinfo:tense               ?tense ;' +
                 '                   lexinfo:number              ?no ;' +
                 '                   lexinfo:gender              ?gen .' +
@@ -526,8 +513,8 @@ function extractVerb(baseObj, res) {
                     genderStr += " " + toCzech(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("Verb") + ", " +
-                    toCzech("gerundive") + ", " +
+                appendEntry(base, toCzech("verb") + ", " +
+                    toCzech("Transgressive") + ", " +
                     toCzech(getOntoName(tense)) + ", " +
                     toCzech(getOntoName(no)) +
                     genderStr);
@@ -537,7 +524,7 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?no ?person ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech  lexinfo:Verb ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech  lexinfo:verb ; ' +
                 '                   lexinfo:verbFormMood  lexinfo:conditional ;' +
                 '                   lexinfo:number        ?no ;' +
                 '                   lexinfo:person        ?person .' +
@@ -550,7 +537,7 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let person = getValue(result, "person");
 
-                appendEntry(base, toCzech("Verb") + ", " +
+                appendEntry(base, toCzech("verb") + ", " +
                     toCzech("conditional") + ", " +
                     toCzech(getOntoName(no)) + ", " +
                     toCzech(getOntoName(person)));
@@ -560,7 +547,7 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?mood ?tense ?no ?person ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:Verb ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:verb ; ' +
                 '                  lexinfo:verbFormMood  ?mood ;' +
                 '                  lexinfo:number        ?no ;' +
                 '                  lexinfo:person        ?person .' +
@@ -576,7 +563,7 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let person = getValue(result, "person");
 
-                appendEntry(base, toCzech("Verb") + ", " +
+                appendEntry(base, toCzech("verb") + ", " +
                     toCzech(getOntoName(mood)) + ", " +
                     toCzech(getOntoName(tense)) + ", " +
                     toCzech(getOntoName(no)) + ", " +
@@ -590,13 +577,13 @@ function extractAdverb(baseObj, res) {
     let level = baseObj["level"];
     let base = baseObj["base"];
     if (level === 1) {
-        appendEntry(base, toCzech("Adverb"));
+        appendEntry(base, toCzech("adverb"));
     } else if (level === 2) {
         let query =
             PREFIXES +
             'SELECT ?deg ' +
             'WHERE { ' +
-            '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Adverb ; ' +
+            '    <' + res + '> lexinfo:partOfSpeech      lexinfo:adverb ; ' +
             '    optional {<' + res + '> lexinfo:degree ?deg}' +
             '    <' + base + '> dbnary:describes ?posRes . ' +
             '    ?posRes lemon:formVariant <' + res + '> . ' +
@@ -604,29 +591,29 @@ function extractAdverb(baseObj, res) {
         let results = getResults(query);
         if (results.length === 1) {
             let deg = getValue(results[0], "deg");
-            appendEntry(base, toCzech("Adverb") + ", " + toCzech(getOntoName(deg)));
+            appendEntry(base, toCzech("adverb") + ", " + toCzech(getOntoName(deg)));
         }
     }
 }
 
 function extractPreposition(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("Preposition"));
+    appendEntry(base, toCzech("preposition"));
 }
 
 function extractConjunction(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("Conjunction"));
+    appendEntry(base, toCzech("conjunction"));
 }
 
 function extractParticle(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("Particle"));
+    appendEntry(base, toCzech("particle"));
 }
 
 function extractInterjection(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("Interjection"));
+    appendEntry(base, toCzech("interjection"));
 }
 
 function isVerbMood(res) {
@@ -651,12 +638,12 @@ function isVerbParticiple(res) {
     return (results.length === 1);
 }
 
-function isVerbGerundive(res) {
+function isVerbTransgressive(res) {
     let query =
         PREFIXES +
         'SELECT * ' +
         'WHERE { ' +
-        '    <' + res + '> lexinfo:verbFormMood lexinfo:gerundive .' +
+        '    <' + res + '> mte:hasVerbForm mte:Transgressive .' +
         '}';
     let results = getResults(query);
     return (results.length === 1);
@@ -797,7 +784,7 @@ function getOntoName(property) {
 function getPronunciationElement(pronunciations) {
     let pronElement = "";
     if (pronunciations.length > 0) {
-        pronElement = " (<i>" + pronunciations.join(" / ") + "</i>):";
+        pronElement = " (<i>" + pronunciations.join(" / ") + "</i>)";
     }
     return pronElement;
 }
@@ -896,29 +883,29 @@ function toCzech(word) {
             return "6.";
         case "instrumentalCase" :
             return "7.";
-        case "Noun" :
+        case "noun" :
             return "podstatné jméno";
-        case "Adjective" :
+        case "adjective" :
             return "přídavné jméno";
-        case "Pronoun" :
+        case "pronoun" :
             return "zájmeno";
-        case "Numeral" :
+        case "numeral" :
             return "číslovka";
-        case "Verb" :
+        case "verb" :
             return "sloveso";
-        case "Adverb" :
+        case "adverb" :
             return "příslovce";
-        case "Preposition" :
+        case "preposition" :
             return "předložka";
-        case "Conjunction" :
+        case "conjunction" :
             return "spojka";
-        case "Particle" :
+        case "particle" :
             return "částice";
-        case  "Interjection" :
+        case "interjection":
             return "citoslovce";
         case "NominalAdjective" :
             return "jmenný tvar";
-        case "positive" :
+        case "positive":
             return "1. stupeň";
         case "comparative" :
             return "2. stupeň";
@@ -946,7 +933,7 @@ function toCzech(word) {
             return "čas přítomný";
         case  "future" :
             return "čas budoucí";
-        case "gerundive":
+        case "Transgressive":
             return "přechodník";
         case "conditional":
             return "zp. podmiňovací";
