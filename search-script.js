@@ -56,7 +56,6 @@ function getResults(query) {
     http.send();
     let results;
     if (result !== undefined) {
-        // console.log(result);
         let resultObj = JSON.parse(result);
         results = resultObj["results"]["bindings"];
     }
@@ -86,34 +85,34 @@ function extractResource(resource) {
 function extractPOS(baseObj, res, pos) {
     let posName = getOntoName(pos);
     switch (posName) {
-        case "noun":
+        case "Noun":
             extractNoun(baseObj, res);
             break;
-        case "adjective":
+        case "Adjective":
             extractAdjective(baseObj, res);
             break;
-        case "pronoun":
+        case "Pronoun":
             extractPronoun(baseObj, res);
             break;
-        case "numeral":
+        case "Numeral":
             extractNumeral(baseObj, res);
             break;
-        case "verb":
+        case "Verb":
             extractVerb(baseObj, res);
             break;
-        case "adverb":
+        case "Adverb":
             extractAdverb(baseObj, res);
             break;
-        case "preposition":
+        case "Preposition":
             extractPreposition(baseObj, res);
             break;
-        case "conjunction":
+        case "Conjunction":
             extractConjunction(baseObj, res);
             break;
-        case "particle":
+        case "Particle":
             extractParticle(baseObj, res);
             break;
-        case "interjection":
+        case "Interjection":
             extractInterjection(baseObj, res);
             break;
     }
@@ -129,7 +128,7 @@ function extractNoun(baseObj, res) {
             PREFIXES +
             'SELECT ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:noun . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Noun . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
@@ -157,7 +156,7 @@ function extractNoun(baseObj, res) {
             PREFIXES +
             'SELECT ?c ?no ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:noun ; ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Noun ; ' +
             '                   lexinfo:case  ?c ; ' +
             '                   lexinfo:number  ?no ; ' +
             '                   lexinfo:gender  ?gen .' +
@@ -255,7 +254,7 @@ function extractPronoun(baseObj, res) {
             PREFIXES +
             'SELECT ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:pronoun . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Pronoun . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
@@ -282,7 +281,7 @@ function extractPronoun(baseObj, res) {
                 PREFIXES +
                 'SELECT ?c ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:pronoun ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Pronoun ; ' +
                 '    optional {<' + res + '> lexinfo:case  ?c} ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    optional {<' + res + '> lexinfo:gender  ?gen} ' +
@@ -314,7 +313,7 @@ function extractPronoun(baseObj, res) {
                 PREFIXES +
                 'SELECT ?c ?no ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:pronoun ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Pronoun ; ' +
                 '                   lexinfo:case  ?c ; ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
@@ -345,7 +344,7 @@ function extractNumeral(baseObj, res) {
             PREFIXES +
             'SELECT ?no ?gen ?an ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:numeral . ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Numeral . ' +
             '    optional {<' + res + '> lexinfo:gender  ?gen}' +
             '    optional {<' + res + '> lexinfo:animacy ?an}' +
             '    optional {<' + res + '> lexinfo:number ?no}' +
@@ -375,7 +374,7 @@ function extractNumeral(baseObj, res) {
                 PREFIXES +
                 'SELECT ?c ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:numeral ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Numeral ; ' +
                 '    optional {<' + res + '> lexinfo:case  ?c} ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    optional {<' + res + '> lexinfo:gender  ?gen} ' +
@@ -407,7 +406,7 @@ function extractNumeral(baseObj, res) {
                 PREFIXES +
                 'SELECT ?c ?no ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:numeral ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Numeral ; ' +
                 '                   lexinfo:case  ?c ; ' +
                 '    optional {<' + res + '> lexinfo:number  ?no} ' +
                 '    <' + base + '> dbnary:describes ?posRes . ' +
@@ -438,8 +437,8 @@ function extractVerb(baseObj, res) {
             PREFIXES +
             'SELECT ?mood ' +
             'WHERE { ' +
-            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:verb . ' +
-            '    optional {<' + res + '> lexinfo:verbFormMood ?mood} ' +
+            '    <' + res + '>  lexinfo:partOfSpeech lexinfo:Verb . ' +
+            '    optional {<' + res + '> lexinfo:VerbFormMood ?mood} ' +
             '    <' + base + '> dbnary:describes <' + res + '> .' +
             '}';
         let results = getResults(query);
@@ -457,7 +456,7 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?voice ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:verb ; ' +
+                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:Verb ; ' +
                 '                  lexinfo:voice         ?voice ;' +
                 '                  lexinfo:number        ?no ;' +
                 '                  lexinfo:gender        ?gen .' +
@@ -487,7 +486,7 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?tense ?no ?gen ?an ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech        lexinfo:verb ; ' +
+                '    <' + res + '>  lexinfo:partOfSpeech        lexinfo:Verb ; ' +
                 '                   mte:hasVerbForm             mte:Transgressive ;' +
                 '                   lexinfo:tense               ?tense ;' +
                 '                   lexinfo:number              ?no ;' +
@@ -519,8 +518,8 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?no ?person ' +
                 'WHERE { ' +
-                '    <' + res + '>  lexinfo:partOfSpeech  lexinfo:verb ; ' +
-                '                   lexinfo:verbFormMood  lexinfo:conditional ;' +
+                '    <' + res + '>  lexinfo:partOfSpeech  lexinfo:Verb ; ' +
+                '                   lexinfo:VerbFormMood  lexinfo:conditional ;' +
                 '                   lexinfo:number        ?no ;' +
                 '                   lexinfo:person        ?person .' +
                 '    <' + base + '> dbnary:describes      ?posRes . ' +
@@ -542,8 +541,8 @@ function extractVerb(baseObj, res) {
                 PREFIXES +
                 'SELECT ?mood ?tense ?no ?person ' +
                 'WHERE { ' +
-                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:verb ; ' +
-                '                  lexinfo:verbFormMood  ?mood ;' +
+                '    <' + res + '> lexinfo:partOfSpeech  lexinfo:Verb ; ' +
+                '                  lexinfo:VerbFormMood  ?mood ;' +
                 '                  lexinfo:number        ?no ;' +
                 '                  lexinfo:person        ?person .' +
                 '    optional {<' + res + '> lexinfo:tense ?tense}' +
@@ -578,7 +577,7 @@ function extractAdverb(baseObj, res) {
             PREFIXES +
             'SELECT ?deg ' +
             'WHERE { ' +
-            '    <' + res + '> lexinfo:partOfSpeech      lexinfo:adverb ; ' +
+            '    <' + res + '> lexinfo:partOfSpeech      lexinfo:Adverb ; ' +
             '    optional {<' + res + '> lexinfo:degree ?deg}' +
             '    <' + base + '> dbnary:describes ?posRes . ' +
             '    ?posRes lemon:formVariant <' + res + '> . ' +
@@ -616,7 +615,7 @@ function isVerbMood(res) {
         PREFIXES +
         'SELECT ?mood ' +
         'WHERE { ' +
-        '    <' + res + '> lexinfo:verbFormMood ?mood .' +
+        '    <' + res + '> lexinfo:VerbFormMood ?mood .' +
         '}';
     let results = getResults(query);
     return (results.length === 1);
@@ -649,7 +648,7 @@ function isVerbConditional(res) {
         PREFIXES +
         'SELECT * ' +
         'WHERE { ' +
-        '    <' + res + '> lexinfo:verbFormMood lexinfo:conditional .' +
+        '    <' + res + '> lexinfo:VerbFormMood lexinfo:conditional .' +
         '}';
     let results = getResults(query);
     return (results.length === 1);
