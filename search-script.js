@@ -1,4 +1,4 @@
-const DEFAULT_ENDPOINT = "http://localhost:3030/wiki/sparql";
+const DEFAULT_ENDPOINT = "https://cs.dbpedia.org/sparql";
 
 let currentRow;
 let baseMap;
@@ -6,9 +6,6 @@ let baseMap;
 function sendRequest() {
     currentRow = 0;
     baseMap = {};
-
-    // Store endpoint URL
-    localStorage.lastendpoint = document.getElementById("endpoint").value;
 
     let word = document.getElementById("word").value;
     document.getElementById("hidden-table").style.display = "block";
@@ -46,12 +43,11 @@ function getResources(word) {
 }
 
 function getResults(query) {
-    let endpoint = document.getElementById("endpoint").value;
     let params = "?query=" + encodeURIComponent(query) + "&format=json";
 
     let result;
     let http = new XMLHttpRequest();
-    http.open("GET", endpoint + params, false);
+    http.open("GET", DEFAULT_ENDPOINT + params, false);
     http.onreadystatechange = function () {
         if (http.readyState === 4) {
             result = http.responseText;
@@ -67,7 +63,6 @@ function getResults(query) {
     if (results === undefined || results === null) {
         results = [];
     }
-
     return results;
 }
 
@@ -118,7 +113,7 @@ function extractPOS(baseObj, res, pos) {
         case "particle":
             extractParticle(baseObj, res);
             break;
-        case "isnterjection":
+        case "interjection":
             extractInterjection(baseObj, res);
             break;
     }

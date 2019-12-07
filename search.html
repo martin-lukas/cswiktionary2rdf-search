@@ -15,9 +15,6 @@
     Wikislovníku.
 </p>
 
-<label for="endpoint">Endpoint URL:</label>
-<input id="endpoint" type="text" size="50"/><br><br>
-
 <label for="word">Hledej:</label>
 <input id="word" type="text" size="25">
 <input id="send" type="submit" value="Odeslat" onclick="sendRequest();">
@@ -39,12 +36,6 @@
 
 <script>
     document.getElementById("hidden-table").style.display = "none";
-
-    // Load last used endpoint (if it exists)
-    let lastEndpoint = localStorage.lastendpoint;
-    document.getElementById("endpoint").value = (lastEndpoint !== undefined)
-        ? lastEndpoint
-        : DEFAULT_ENDPOINT;
 
     // Enabling sending form with pressing ENTER
     let input = document.getElementById("word");
