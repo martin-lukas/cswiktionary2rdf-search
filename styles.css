@@ -1,42 +1,57 @@
-body {margin: 0; padding: 0; background-color: #ededed; font: 1.1em verdana, arial;}
+:root {
+	--default-text-color: #333;
+	--active-el-color: #4994d4;
+}
 
-/* For divs that change dimensions when afected by margin, padding or a border. */
-* {
-	-webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-	box-sizing: border-box;
+* {box-sizing: border-box;}
+*:focus, *:visited, *:active, *:hover {outline: 0 !important;}
+*::-moz-focus-inner {border: 0;}
+html, body, ul, li, a {margin: 0;padding: 0;border: 0;font-family: Arial, Helvetica, sans-serif;}
+html, body {background-color: #f0f0f0;}
+body {color: var(--default-text-color);}
+
+#container {
+	margin: 0 auto;
+	background-color: white;
+	border-radius: 0 0 10px 10px;
+	max-width: 850px;
+	min-width: 210px;
 }
 
 #header {
-	background-color: #ededed; 
 	text-align: center;
+	font-size: 20px;
+	padding: 5px 0;
+	color: var(--default-text-color);
+	user-select: none;
+	text-shadow: 1px 1px #656464;
 }
-#container {
-	min-height: 500px; 
-	background-color: white;
+
+#content-area {padding: 20px;}
+
+li {padding: 0 0 10px 0; list-style: none}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
 }
-#content {
-	max-width: 800px; 
-	margin: 0 auto; 
-	padding: 10px;
+
+th, td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	vertical-align: top;
 }
+
 #footer {
-	padding: 10px; 
 	text-align: center;
+	font-size: 1em;
+	color: #5a5a5a;
+	padding: 20px 0 10px 0;
 }
 
-td, th {border: 1px solid black;}
-ul {margin: 0;}
-table {border-collapse: collapse;}
-td {vertical-align: top}
-textarea {
-	width: 600px;
-	height: 300px;
-}
+#footer a {text-decoration: underline; color: #5a5a5a;}
 
-pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
-.string { color: green; }
-.number { color: darkorange; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: red; }
+#footer a:hover {
+	color: var(--default-text-color);
+}
