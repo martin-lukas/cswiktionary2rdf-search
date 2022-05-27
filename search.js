@@ -1,4 +1,5 @@
 const DEFAULT_ENDPOINT = "https://cs.dbpedia.org/sparql";
+const LANG = document.documentElement.lang; // Get webpage language
 
 let currentRow;
 let baseMap;
@@ -21,7 +22,7 @@ function extract(word) {
 
     let resources = getResources(word);
 
-    title.innerHTML = "<b>Výskyty pro \'" + word + "\':</b>";
+    title.innerHTML = "<b>Found occurances for \'" + word + "\':</b>";
     for (let i = 0; i < resources.length; i++) {
         console.log("Extracting resource: " + resources[i]);
 
@@ -152,7 +153,7 @@ function extractNoun(baseObj, res) {
 
                 appendEntry(
                     base,
-                    toCzech("noun") + ", " + toCzech(getOntoName(gen)) + " " + toCzech(getOntoName(an))
+                    toRM("noun") + ", " + toRM(getOntoName(gen)) + " " + toRM(getOntoName(an))
                 );
             }
         }
@@ -176,14 +177,14 @@ function extractNoun(baseObj, res) {
             let no = getValue(result, "no");
             let gen = getValue(result, "gen");
             let an = getValue(result, "an");
-            let genderStr = toCzech(getOntoName(gen));
+            let genderStr = toRM(getOntoName(gen));
             if (an !== "") {
-                genderStr += " " + toCzech(getOntoName(an));
+                genderStr += " " + toRM(getOntoName(an));
             }
-            appendEntry(base, toCzech("noun") + ", " +
+            appendEntry(base, toRM("noun") + ", " +
                 genderStr + ", " +
-                toCzech(getOntoName(no)) + ", " +
-                toCzech(getOntoName(c)) + " pád");
+                toRM(getOntoName(no)) + ", " +
+                toRM(getOntoName(c)));
         }
     }
 }
@@ -192,7 +193,7 @@ function extractAdjective(baseObj, res) {
     let level = baseObj["level"];
     let base = baseObj["base"];
     if (level === 1) {
-        appendEntry(base, toCzech("adjective"));
+        appendEntry(base, toRM("adjective"));
     } else if (level === 2) {
         if (isCaseForm(res)) {
             let query =
@@ -217,20 +218,20 @@ function extractAdjective(baseObj, res) {
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
 
-                let genderStr = toCzech(getOntoName(gen));
+                let genderStr = toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
 
                 let form = getValue(result, "form");
                 if (form !== "") {
-                    form = "(" + toCzech(getOntoName(form)) + ")";
+                    form = "(" + toRM(getOntoName(form)) + ")";
                 }
 
-                appendEntry(base, toCzech("adjective") + ", " +
-                    toCzech(getOntoName(no)) + ", " +
+                appendEntry(base, toRM("adjective") + ", " +
+                    toRM(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád " + form);
+                    toRM(getOntoName(c)) + " pád " + form);
             }
         } else if (isDegreeForm(res)) {
             let query =
@@ -245,7 +246,7 @@ function extractAdjective(baseObj, res) {
             let results = getResults(query);
             if (results.length === 1) {
                 let deg = getValue(results[0], "deg");
-                appendEntry(base, toCzech("adjective") + ", " + toCzech(getOntoName(deg)));
+                appendEntry(base, toRM("adjective") + ", " + toRM(getOntoName(deg)));
             }
         }
     }
@@ -272,12 +273,12 @@ function extractPronoun(baseObj, res) {
                 let an = getValue(result, "an");
                 let genderStr = "";
                 if (gen !== "") {
-                    genderStr += ", " + toCzech(getOntoName(gen));
+                    genderStr += ", " + toRM(getOntoName(gen));
                     if (an !== "") {
-                        genderStr += " " + toCzech(getOntoName(an));
+                        genderStr += " " + toRM(getOntoName(an));
                     }
                 }
-                appendEntry(base, toCzech("pronoun") + genderStr);
+                appendEntry(base, toRM("pronoun") + genderStr);
             }
         }
     } else if (level === 2) {
@@ -303,15 +304,15 @@ function extractPronoun(baseObj, res) {
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
 
-                let genderStr = toCzech(getOntoName(gen));
+                let genderStr = toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("pronoun") + ", " +
-                    toCzech(getOntoName(no)) + ", " +
+                appendEntry(base, toRM("pronoun") + ", " +
+                    toRM(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád");
+                    toRM(getOntoName(c)) + " pád");
             }
         } else {
             let query =
@@ -330,12 +331,12 @@ function extractPronoun(baseObj, res) {
                 let no = getValue(result, "no");
                 let noStr = "";
                 if (no !== "") {
-                    noStr = ", " + toCzech(getOntoName(no));
+                    noStr = ", " + toRM(getOntoName(no));
                 }
                 let c = getValue(result, "c");
-                appendEntry(base, toCzech("pronoun") +
+                appendEntry(base, toRM("pronoun") +
                     noStr + ", " +
-                    toCzech(getOntoName(c)) + " pád");
+                    toRM(getOntoName(c)) + " pád");
             }
         }
     }
@@ -362,15 +363,15 @@ function extractNumeral(baseObj, res) {
                 let no = getValue(result, "no");
                 let noStr = "";
                 if (no !== "") {
-                    noStr = ", " + toCzech(getOntoName(no));
+                    noStr = ", " + toRM(getOntoName(no));
                 }
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
-                let genderStr = ", " + toCzech(getOntoName(gen));
+                let genderStr = ", " + toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
-                appendEntry(base, toCzech("numeral") + noStr + genderStr);
+                appendEntry(base, toRM("numeral") + noStr + genderStr);
             }
         }
     } else if (level === 2) {
@@ -396,15 +397,15 @@ function extractNumeral(baseObj, res) {
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
 
-                let genderStr = toCzech(getOntoName(gen));
+                let genderStr = toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("numeral") + ", " +
-                    toCzech(getOntoName(no)) + ", " +
+                appendEntry(base, toRM("numeral") + ", " +
+                    toRM(getOntoName(no)) + ", " +
                     genderStr + ", " +
-                    toCzech(getOntoName(c)) + " pád");
+                    toRM(getOntoName(c)) + " pád");
             }
         } else {
             let query =
@@ -423,12 +424,12 @@ function extractNumeral(baseObj, res) {
                 let no = getValue(result, "no");
                 let noStr = "";
                 if (no !== "") {
-                    noStr = toCzech(getOntoName(no)) + ", ";
+                    noStr = toRM(getOntoName(no)) + ", ";
                 }
                 let c = getValue(result, "c");
-                appendEntry(base, toCzech("numeral") + ", " +
+                appendEntry(base, toRM("numeral") + ", " +
                     noStr +
-                    toCzech(getOntoName(c)) + " pád");
+                    toRM(getOntoName(c)) + " pád");
             }
         }
     }
@@ -451,9 +452,9 @@ function extractVerb(baseObj, res) {
             let mood = getValue(results[0], "mood");
             let moodStr = "";
             if (mood !== "") {
-                moodStr = ", " + toCzech(getOntoName(mood))
+                moodStr = ", " + toRM(getOntoName(mood))
             }
-            appendEntry(base, toCzech("verb") + moodStr);
+            appendEntry(base, toRM("verb") + moodStr);
         }
     } else if (level === 2) {
         if (isVerbParticiple(res)) {
@@ -476,14 +477,14 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
-                let genderStr = ", " + toCzech(getOntoName(gen));
+                let genderStr = ", " + toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("verb") + ", " +
-                    toCzech(getOntoName(voice)) + ", " +
-                    toCzech(getOntoName(no)) +
+                appendEntry(base, toRM("verb") + ", " +
+                    toRM(getOntoName(voice)) + ", " +
+                    toRM(getOntoName(no)) +
                     genderStr);
             }
         } else if (isVerbTransgressive(res)) {
@@ -507,15 +508,15 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let gen = getValue(result, "gen");
                 let an = getValue(result, "an");
-                let genderStr = ", " + toCzech(getOntoName(gen));
+                let genderStr = ", " + toRM(getOntoName(gen));
                 if (an !== "") {
-                    genderStr += " " + toCzech(getOntoName(an));
+                    genderStr += " " + toRM(getOntoName(an));
                 }
 
-                appendEntry(base, toCzech("verb") + ", " +
-                    toCzech("Transgressive") + ", " +
-                    toCzech(getOntoName(tense)) + ", " +
-                    toCzech(getOntoName(no)) +
+                appendEntry(base, toRM("verb") + ", " +
+                    toRM("Transgressive") + ", " +
+                    toRM(getOntoName(tense)) + ", " +
+                    toRM(getOntoName(no)) +
                     genderStr);
             }
         } else if (isVerbConditional(res)) {
@@ -536,10 +537,10 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let person = getValue(result, "person");
 
-                appendEntry(base, toCzech("verb") + ", " +
-                    toCzech("conditional") + ", " +
-                    toCzech(getOntoName(no)) + ", " +
-                    toCzech(getOntoName(person)));
+                appendEntry(base, toRM("verb") + ", " +
+                    toRM("conditional") + ", " +
+                    toRM(getOntoName(no)) + ", " +
+                    toRM(getOntoName(person)));
             }
         } else if (isVerbMood(res)) {
             let query =
@@ -562,11 +563,11 @@ function extractVerb(baseObj, res) {
                 let no = getValue(result, "no");
                 let person = getValue(result, "person");
 
-                appendEntry(base, toCzech("verb") + ", " +
-                    toCzech(getOntoName(mood)) + ", " +
-                    toCzech(getOntoName(tense)) + ", " +
-                    toCzech(getOntoName(no)) + ", " +
-                    toCzech(getOntoName(person)));
+                appendEntry(base, toRM("verb") + ", " +
+                    toRM(getOntoName(mood)) + ", " +
+                    toRM(getOntoName(tense)) + ", " +
+                    toRM(getOntoName(no)) + ", " +
+                    toRM(getOntoName(person)));
             }
         }
     }
@@ -576,7 +577,7 @@ function extractAdverb(baseObj, res) {
     let level = baseObj["level"];
     let base = baseObj["base"];
     if (level === 1) {
-        appendEntry(base, toCzech("adverb"));
+        appendEntry(base, toRM("adverb"));
     } else if (level === 2) {
         let query =
             PREFIXES +
@@ -590,29 +591,29 @@ function extractAdverb(baseObj, res) {
         let results = getResults(query);
         if (results.length === 1) {
             let deg = getValue(results[0], "deg");
-            appendEntry(base, toCzech("adverb") + ", " + toCzech(getOntoName(deg)));
+            appendEntry(base, toRM("adverb") + ", " + toRM(getOntoName(deg)));
         }
     }
 }
 
 function extractPreposition(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("preposition"));
+    appendEntry(base, toRM("preposition"));
 }
 
 function extractConjunction(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("conjunction"));
+    appendEntry(base, toRM("conjunction"));
 }
 
 function extractParticle(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("particle"));
+    appendEntry(base, toRM("particle"));
 }
 
 function extractInterjection(baseObj, res) {
     let base = baseObj["base"];
-    appendEntry(base, toCzech("interjection"));
+    appendEntry(base, toRM("interjection"));
 }
 
 function isVerbMood(res) {
@@ -850,92 +851,97 @@ function getCaseOrder(caseName) {
     return caseStr;
 }
 
-function toCzech(word) {
+/**
+ * Converts the element into readable resource message. Default is English ("en")
+ */
+function toRM(word, language = LANG) {
+    const isEn = language === "en";
+
     switch (word) {
         case "masculine" :
-            return "rod mužský";
+            return isEn ? "gender masculine" : "rod mužský";
         case "feminine" :
-            return "rod ženský";
+            return isEn ? "gender feminine" : "rod ženský";
         case "neuter" :
-            return "rod střední";
+            return isEn ? "gender neuter" : "rod střední";
         case "animate" :
-            return "životný";
+            return isEn ? "animate" : "životný";
         case "inanimate" :
-            return "neživotný";
+            return isEn ? "inanimate" : "neživotný";
         case "singular" :
-            return "č. jednotné";
+            return isEn ? "singular" : "č. jednotné";
         case "plural" :
-            return "č. množné";
+            return isEn ? "plural" : "č. množné";
         case "dual" :
-            return "č. duální";
+            return isEn ? "dual" : "č. duální";
         case "nominativeCase" :
-            return "1.";
+            return isEn ? "case nominative" : "1. pád";
         case "genitiveCase" :
-            return "2.";
+            return isEn ? "case genitive" : "2. pád";
         case "dativeCase" :
-            return "3.";
+            return isEn ? "case dative" : "3. pád";
         case "accusativeCase" :
-            return "4.";
+            return isEn ? "case accusative" : "4. pád";
         case "vocativeCase" :
-            return "5.";
+            return isEn ? "case vocative" : "5. pád";
         case "locativeCase" :
-            return "6.";
+            return isEn ? "case locative" : "6. pád";
         case "instrumentalCase" :
-            return "7.";
+            return isEn ? "case instrumental" : "7. pád";
         case "noun" :
-            return "podstatné jméno";
+            return isEn ? "noun" : "podstatné jméno";
         case "adjective" :
-            return "přídavné jméno";
+            return isEn ? "adjective" : "přídavné jméno";
         case "pronoun" :
-            return "zájmeno";
+            return isEn ? "pronoun" : "zájmeno";
         case "numeral" :
-            return "číslovka";
+            return isEn ? "numeral" : "číslovka";
         case "verb" :
-            return "sloveso";
+            return isEn ? "verb" : "sloveso";
         case "adverb" :
-            return "příslovce";
+            return isEn ? "adverb" : "příslovce";
         case "preposition" :
-            return "předložka";
+            return isEn ? "preposition" : "předložka";
         case "conjunction" :
-            return "spojka";
+            return isEn ? "conjunction" : "spojka";
         case "particle" :
-            return "částice";
+            return isEn ? "particle" : "částice";
         case "interjection":
-            return "citoslovce";
+            return isEn ? "interjection" : "citoslovce";
         case "NominalAdjective" :
-            return "jmenný tvar";
+            return isEn ? "nominal adjective" : "jmenný tvar";
         case "positive":
-            return "1. stupeň";
+            return isEn ? "positive" : "1. stupeň";
         case "comparative" :
-            return "2. stupeň";
+            return isEn ? "comparative" : "2. stupeň";
         case "superlative" :
-            return "3. stupeň";
+            return isEn ? "superlative" : "3. stupeň";
         case "firstPerson" :
-            return "1. os.";
+            return isEn ? "1st person" : "1. os.";
         case "secondPerson" :
-            return "2. os.";
+            return isEn ? "2nd person" : "2. os.";
         case "thirdPerson" :
-            return "3. os.";
+            return isEn ? "3rd person" : "3. os.";
         case  "indicative" :
-            return "zp. oznamovací";
+            return isEn ? "mood indicative" : "zp. oznamovací";
         case  "imperative" :
-            return "zp. rozkazovací";
+            return isEn ? "mood imperative" : "zp. rozkazovací";
         case  "infinitive" :
-            return "infinitiv";
+            return isEn ? "infinitive" : "infinitiv";
         case  "active" :
-            return "rod činný";
+            return isEn ? "voice active" : "rod činný";
         case  "passive" :
-            return "rod trpný";
+            return isEn ? "voice passive" : "rod trpný";
         case  "past" :
-            return "čas minulý";
+            return isEn ? "past tense" : "čas minulý";
         case  "present" :
-            return "čas přítomný";
+            return isEn ? "present tense" : "čas přítomný";
         case  "future" :
-            return "čas budoucí";
+            return isEn ? "future tense" : "čas budoucí";
         case "Transgressive":
-            return "přechodník";
+            return isEn ? "transgressive form" : "přechodník";
         case "conditional":
-            return "zp. podmiňovací";
+            return isEn ? "conditional form" : "zp. podmiňovací";
         default:
             return word;
     }
