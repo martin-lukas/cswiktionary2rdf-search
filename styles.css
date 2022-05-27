@@ -27,6 +27,10 @@ body {color: var(--default-text-color);}
 	text-shadow: 1px 1px #656464;
 }
 
+#lang-div {
+	text-align: center;
+}
+
 #content-area {padding: 20px;}
 
 li {padding: 0 0 10px 0; list-style: none}

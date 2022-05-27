@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <title>Search Engine for the Czech Wiktionary</title>
+  <title>Vylepšený vyhledávač na Wikislovníku</title>
   <link href="styles.css" rel="stylesheet" type="text/css">
   <script src="search.js"></script>
 </head>
 <body>
 <div id="container">
   <div id="header">
-    <h1>Search Engine for the Czech Wiktionary</h1>
+    <h1>Vylepšený vyhledávač Wikislovníku</h1>
   </div>
   <div id="lang-div">
-    Choose a language: <b>English</b> | <a href="index_cs.html">Čeština</a>
+    Vyberte jazyk: <a href="index.html">English</a> | <b>Čeština</b>
   </div>
   <div id="content-area">
-    <p>This search engine gives you all the available structured information about Czech words.</p>
-    <label for="word">Try a word:</label>
+    <p>Tento vyhledávač poskytuje informace o slovech či slovních tvarech nacházejících se v českém
+      Wikislovníku.</p>
+    <label for="word">Hledej:</label>
     <input id="word" size="25" type="text">
-    <input id="send" onclick="sendRequest();" type="submit" value="Submit">
+    <input id="send" onclick="sendRequest();" type="submit" value="Odeslat">
     <br><br>
     <div id="title"></div>
     <br>
@@ -26,8 +27,8 @@
     <table id="hidden-table">
       <thead>
       <tr>
-        <th>Page title</th>
-        <th>Word form information</th>
+        <th>Název stránky</th>
+        <th>Popis slovního tvaru</th>
       </tr>
       </thead>
       <tbody id="tbody">
@@ -36,7 +37,7 @@
   </div>
 
   <div id="footer">
-    &copy; 2020 Martin Lukas | More of my projects at <a href="https://github.com/martin-lukas">GitHub</a>
+    &copy; 2020 Martin Lukáš | Více najdete na mém <a href="https://github.com/martin-lukas">GitHubu</a>
   </div>
 </div>
 
